@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +53,7 @@ public class FileAnalizerTests {
 
         Assertions.assertEquals(9, smallAnalizer.countLetters());
         Assertions.assertEquals(12, smallAnalizer.countWords());
-        Assertions.assertEquals(11, smallAnalizer.countLines());
+        Assertions.assertEquals(10, smallAnalizer.countLines());
 
         HashMap<Character, Integer> statistic = new HashMap<Character, Integer>();
         statistic.put('1', 4);
@@ -66,18 +68,51 @@ public class FileAnalizerTests {
         statistic.put('k', 1);
         statistic.put('m', 1);
         statistic.put('\n', 10);
-        statistic.put('\r', 10);
-        statistic.put(' ', 3);
+        statistic.put(' ', 4);
 
         Assertions.assertEquals(statistic, smallAnalizer.countFrequencyCharacteristic());
     }
 
     @Test
-    public void usingCache() {
+    public void usingLargeFile() {
 
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < 100; i++) {
 
-           Assertions.assertNotEquals(-1, new FileAnalizer(largeFile).countLines());
+            Assertions.assertNotEquals(-1, new FileAnalizer(largeFile).countLines());
         }
+    }
+    @Test
+    public void checkCaching(){
+
+        String path = "../test.txt";
+        clearFile(path);
+        for(int i = 0; i < 10000; i++) {
+
+            if (0 == i % 5){
+                clearFile(path);
+            }
+            else {
+                setOneLine(path);
+            }
+
+            Assertions.assertEquals(i % 5,  new FileAnalizer(path).countLines());
+        }
+    }
+
+    private void clearFile(String path) {
+        setContent(path, "", false);
+    }
+    private void setOneLine(String path) {
+        setContent(path, "One line\n", true);
+    }
+    private void setContent(String path, String content, boolean append) {
+
+        try {
+            File file = new File(path);
+            FileWriter writer = new FileWriter(file, append);
+            writer.write(content);
+            writer.close();
+        }
+        catch (Exception exception) {}
     }
 }
