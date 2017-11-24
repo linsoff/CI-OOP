@@ -4,6 +4,7 @@ import medvedstudio.sandbox.ci.lab9.src.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.rmi.AccessException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
