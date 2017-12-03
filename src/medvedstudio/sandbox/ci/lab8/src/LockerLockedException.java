@@ -5,9 +5,6 @@ import java.rmi.AccessException;
 public class LockerLockedException extends AccessException {
 
     public LockerLockedException (){
-
-        String message = "Container is locked. You can't set value.";
-
-        super(message);
+        super("Container is locked. You can't set value.");
     }
 }
